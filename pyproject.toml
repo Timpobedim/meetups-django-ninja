@@ -1,0 +1,57 @@
+[project]
+name = "meetupboard"
+version = "1.0.0"
+description = "MeetupBoard — API афиши IT-митапов (Django Ninja)"
+readme = "README.md"
+requires-python = ">=3.12"
+license = { text = "MIT" }
+dependencies = [
+    "django>=5.2",
+    "django-ninja>=1.4",
+    "jwtninja>=2.0",
+    "django-cors-headers>=4.4",
+    "dj-database-url>=2.2",
+    "psycopg[binary]>=3.2",
+    "python-slugify>=8.0",
+    "pydantic[email]>=2.9",
+    "gunicorn>=23.0",
+]
+
+[dependency-groups]
+dev = [
+    "ruff>=0.6",
+    "ty>=0.0.1",
+    "django-stubs>=5.2,<5.3",
+    "parameterized>=0.9",
+    "coverage>=7.6",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+extend-exclude = ["*/migrations/*"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "C4", "SIM", "RUF", "DJ"]
+# RUF001-003: русские строки содержат кириллицу, похожую на латиницу — это нормально.
+ignore = ["RUF001", "RUF002", "RUF003", "RUF012"]
+
+[tool.ruff.lint.per-file-ignores]
+"apps/*/tests.py" = ["S101", "S105", "S106"]
+"helpers/testing.py" = ["S107"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["apps", "config", "helpers"]
+
+# В референсе три правила ty были отключены из-за динамики Django. Здесь все правила включены:
+# типы Django даёт django-stubs, менеджер объявлен явно, поля из аннотаций описаны в моделях.
+[tool.ty.src]
+exclude = ["**/migrations/**"]
+
+[tool.coverage.run]
+source = ["apps", "helpers", "config"]
+omit = ["*/migrations/*", "*/tests.py", "config/asgi.py", "config/wsgi.py"]
+
+[tool.coverage.report]
+fail_under = 95
+show_missing = true

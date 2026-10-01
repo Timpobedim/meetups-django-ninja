@@ -1,0 +1,21 @@
+name: hurl
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  hurl:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v6
+        with:
+          python-version: "3.12"
+      - name: Install Hurl
+        run: |
+          curl -sSL https://github.com/Orange-OpenSource/hurl/releases/download/8.0.1/hurl-8.0.1-x86_64-unknown-linux-gnu.tar.gz | tar xz
+          echo "$PWD/hurl-8.0.1-x86_64-unknown-linux-gnu/bin" >> "$GITHUB_PATH"
+      - run: uv sync --group dev
+      - run: make test-hurl-with-managed-server
