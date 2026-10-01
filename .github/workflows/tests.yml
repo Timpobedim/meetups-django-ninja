@@ -35,4 +35,4 @@ jobs:
       - name: Django tests (${{ matrix.database }})
         run: make test
         env:
-          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/meetups' || '' }}
+          DATABASE_URL: ${{ matrix.database == 'postgres' && 'postgres://postgres:postgres@localhost:5432/meetups' || 'sqlite:///db.sqlite3' }}
